@@ -3373,12 +3373,34 @@ IOReturn nl_bjaelectronics_driver_PL2303::setSerialConfiguration( void )
 			break;	    
 		case 460800:
 			fBaudCode = kLinkSpeed460800;  // 0x08
-			break;	    
+			break;
+		case 614400:
+			fBaudCode = kLinkSpeed614400;  // 0x08
+			break;
+		case 921600:
+			fBaudCode = kLinkSpeed921600;  // 0x08
+			break;
+		case 1228800:
+			fBaudCode = kLinkSpeed1228800;  // 0x08
+			break;
+		case 1843200:
+			fBaudCode = kLinkSpeed1843200;  // 0x08
+			break;
+		case 2457600:
+			fBaudCode = kLinkSpeed2457600;  // 0x08
+			break;
+		case 3000000:
+			fBaudCode = kLinkSpeed3000000;  // 0x08
+			break;
+		case 6000000:
+			fBaudCode = kLinkSpeed6000000;  // 0x08
+			break;
 			
-			
+            // Other baudrated may be depend on the model
+            // I changed the error into a warning...
 		default:
-			IOLog("%s(%p)::setSerialConfiguration - Unsupported baud rate\n", getName(), this);
-			fBaudCode = 0;
+			IOLog("%s(%p)::setSerialConfiguration - Requesting non standard baud rate\n", getName(), this);
+			fBaudCode = fPort->BaudRate;
 			break;
     }
 	
@@ -3386,7 +3408,7 @@ IOReturn nl_bjaelectronics_driver_PL2303::setSerialConfiguration( void )
 		buf[0] = fBaudCode & 0xff;
 		buf[1] = (fBaudCode >> 8) & 0xff;
 		buf[2] = (fBaudCode >> 16) & 0xff;
-		buf[3] = (fBaudCode >> 24) & 0xff;
+		buf[3] = (fBaudCode >> 24) & 0xff; // Enough for 16.277 Mbit/s
 	}
 	
     switch (fPort->StopBits) {
